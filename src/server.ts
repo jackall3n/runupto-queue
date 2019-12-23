@@ -31,7 +31,7 @@ app.listen(env.port, () => {
 function processQueue() {
   console.log('blocking on queue for 30');
 
-  app.locals.redis.brpoplpush("strava:events", "strava:events:processing", 30, (error, value) => {
+  app.locals.redis.brpoplpush("strava:events:queued", "strava:events:processing", 30, (error, value) => {
     if (error) {
       console.error(error);
     }
