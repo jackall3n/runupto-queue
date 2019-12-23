@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  run-up-queue:
+    container_name: run-up-queue
+    build: .
+    command: yarn start
+    environment:
+      REDIS_URL: redis://run-up-redis:6379
+    networks:
+      - cache-network
+
+networks:
+  cache-network:
+    external: true
+    name: cache-network
+
