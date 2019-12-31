@@ -2,13 +2,18 @@ import dotEnv from 'dotenv';
 
 dotEnv.config();
 
-const { PORT = '8000', REDIS_URL = 'redis://127.0.0.1:6969', STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = process.env;
+const { PORT = '6000', REDIS_URL = 'redis://127.0.0.1:6969', MONGO_URL, MONGO_USERNAME, MONGO_PASSWORD, STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, STRAVA_URL, STRAVA_CLIENT_URL } = process.env;
 
 const env = {
   port: Number(PORT),
-  redis_url: REDIS_URL,
+  mongo_url: MONGO_URL as string,
+  mongo_username: MONGO_USERNAME as string,
+  mongo_password: MONGO_PASSWORD as string,
   strava_client_id: STRAVA_CLIENT_ID,
-  strava_client_secret: STRAVA_CLIENT_SECRET
+  strava_client_secret: STRAVA_CLIENT_SECRET,
+  strava_url: STRAVA_URL,
+  strava_client_url: STRAVA_CLIENT_URL,
+  redis_url: REDIS_URL
 };
 
 console.log('env', env);
