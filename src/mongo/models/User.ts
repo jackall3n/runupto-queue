@@ -1,10 +1,27 @@
-import { model, Schema, Document } from 'mongoose';
-import { IStravaSession } from './StravaSession';
+import { Document, model, Schema } from 'mongoose';
+import { IStravaSessionSchema } from "./";
+import { IActivity } from "./Activity";
 
-interface IUser extends Document {
-  strava: {
-    session: IStravaSession
+export interface IUser<S = IStravaSessionSchema['_id']> {
+  name: {
+    first: string;
+    last: string;
   }
+  address: {
+    city: string,
+    state: string,
+    country: string
+  },
+  sex: string,
+  profile_picture: string,
+  activities: Array<IActivity['_id']>,
+  strava: {
+    id: number,
+    session: S
+  }
+}
+
+export interface IUserSchema<S = IStravaSessionSchema['_id']> extends Document, IUser<S> {
 }
 
 const UserSchema = new Schema({
@@ -32,4 +49,4 @@ const UserSchema = new Schema({
   }
 });
 
-export const User = model<IUser>('User', UserSchema);
+export const User = model<IUserSchema>('User', UserSchema);

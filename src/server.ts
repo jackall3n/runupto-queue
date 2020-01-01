@@ -5,6 +5,7 @@ import applyMiddleware from "./utils/applyMiddleware";
 import applyRoutes from "./utils/applyRoutes";
 import app from "./app";
 import { connect } from "./redis";
+import connectMongo from "./mongo";
 import ActivityService from "./services/ActivityService";
 import { KnownStravaEvents } from "./types/StravaTypes";
 
@@ -29,8 +30,13 @@ app.listen(env.port, () => {
   };
   app.locals.startup = new Date();
   app.locals.redis = connect(env.redis_url, () => {
-    processQueue();
+    connectMongo(env.mongo_url, env.mongo_username, env.mongo_password).then(() => {
+      console.log('connected to mongo');
+      processQueue();
+    });
   });
+
+
 });
 
 function processQueue() {
@@ -45,6 +51,7 @@ function processQueue() {
 
       if (value) {
         console.log('found:', value);
+
         processEvent(value).then(() => {
           console.log('processed, remove?');
         });
@@ -64,16 +71,14 @@ async function processEvent(eventString: string) {
     const event: KnownStravaEvents = JSON.parse(eventString);
     console.log(event);
 
-    if (event.object_type === 'activity') {
-      activityService.process(event).then(() => {
-        console.log('processed: activity')
-      })
+    switch (event.object_type) {
+      case "activity":
+        await activityService.process(event);
+        break;
+      case "athlete":
+        console.log('unhandled athlete event');
+        break;
     }
-
-    if (event.object_type === 'athlete') {
-      console.log('unhandled athlete event')
-    }
-
   } catch (e) {
     console.log('errored processing event', e);
   }

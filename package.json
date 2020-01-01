@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node-dev src/server",
+    "start:debug": "ts-node src/server",
     "start:docker": "docker-compose up"
   },
   "dependencies": {

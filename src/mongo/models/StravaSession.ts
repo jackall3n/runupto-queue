@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Document } from 'mongoose';
 
 export interface IStravaSession {
   strava_id: string;
@@ -10,6 +10,9 @@ export interface IStravaSession {
   expires_in: number;
 }
 
+export interface IStravaSessionSchema extends IStravaSession, Document {
+}
+
 const StravaSessionSchema = new Schema({
   strava_id: Number,
   access_token: String,
@@ -17,7 +20,9 @@ const StravaSessionSchema = new Schema({
   token_type: String,
   expires_at: Number,
   expires_in: Number,
-  scope: String
+  scope: [{
+    type: String
+  }]
 });
 
-export const StravaSession = model('StravaSession', StravaSessionSchema, 'strava_sessions');
+export const StravaSession = model<IStravaSessionSchema>('StravaSession', StravaSessionSchema, 'strava_sessions');
