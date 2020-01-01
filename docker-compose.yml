@@ -9,9 +9,13 @@ services:
       REDIS_URL: redis://run-up-redis:6379
     networks:
       - cache-network
+      - db-network
 
 networks:
   cache-network:
     external: true
     name: cache-network
+  db-network:
+    external: true
+    name: db-network
 
